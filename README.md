@@ -19,7 +19,7 @@ Data is stored in the database
 System triggers SMS notification to the registered number
 Admin can review all violation records in dashboard
 🚀 Setup Instructions
-git clone https://github.com/your-username/traffic-violation-logger.git
+git clone https://github.com/kani0305/traffic_vilation_logger
 cd traffic-violation-logger
 pip install -r requirements.txt
 python app.py
