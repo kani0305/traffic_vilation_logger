@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Violation</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0eafc, #cfdef3);
+        }
+
+        .box {
+            max-width: 650px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav class="navbar navbar-dark bg-dark px-3">
+    <a class="navbar-brand" href="/">🚓 Traffic System</a>
+
+    <div>
+        <a href="/" class="btn btn-sm btn-light">Dashboard</a>
+        <a href="/add" class="btn btn-sm btn-warning">Add</a>
+        <a href="/view" class="btn btn-sm btn-info">View</a>
+    </div>
+</nav>
+
+<!-- FORM -->
+<div class="box">
+
+    <h3 class="text-center mb-3">🚨 Add Violation</h3>
+
+    <!-- IMPORTANT: multipart for image -->
+    <form id="violationForm" enctype="multipart/form-data">
+
+        <input type="text" name="vehicle_number" class="form-control mb-3"
+               placeholder="Vehicle Number" required>
+
+        <input type="text" name="phone" class="form-control mb-3"
+               placeholder="Phone Number (+91...)" required>
+
+        <select name="violation_type" class="form-control mb-3" required>
+            <option>No Helmet</option>
+            <option>Overspeeding</option>
+            <option>Signal Jump</option>
+            <option>Wrong Parking</option>
+        </select>
+
+        <input type="text" name="location" class="form-control mb-3"
+               placeholder="Location" required>
+
+        <input type="number" name="fine_amount" class="form-control mb-3"
+               placeholder="Fine Amount" required>
+
+        <!-- 📸 IMAGE UPLOAD FIX -->
+        <label>Violation Image</label>
+        <input type="file" name="image" class="form-control mb-3" accept="image/*">
+
+        <button type="submit" class="btn btn-danger btn-submit">
+            🚨 Submit & Send SMS
+        </button>
+
+    </form>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast"
+     style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        display: none;
+        z-index: 9999;
+        font-weight: bold;
+     ">
+</div>
+
+<script>
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 3000);
+}
+
+document.getElementById("violationForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this); // ✅ includes image + all fields
+
+    fetch("/add", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        showToast("🚨 Violation Added & SMS Sent!");
+        document.getElementById("violationForm").reset();
+    })
+    .catch(err => {
+        showToast("❌ Error occurred");
+    });
+});
+</script>
+
+</body>
+</html>

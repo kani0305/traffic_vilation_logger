@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Violations</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .box {
+            margin: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .paid { color: green; font-weight: bold; }
+        .unpaid { color: red; font-weight: bold; }
+
+        img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-3">
+    <a class="navbar-brand" href="/">🚓 Traffic System</a>
+</nav>
+
+<div class="box">
+
+    <h4 class="text-center mb-3">📋 Violations</h4>
+
+    <table class="table table-bordered text-center">
+
+        <!-- HEADER -->
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Vehicle</th>
+                <th>Phone</th>
+                <th>Violation</th>
+                <th>Location</th>
+                <th>Fine</th>
+                <th>Image</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <!-- DATA -->
+        <tbody>
+
+        {% for v in data %}
+        <tr>
+            <td>{{ v.id }}</td>
+            <td>{{ v.vehicle_number }}</td>
+
+            <!-- ✅ PHONE FIX -->
+            <td>{{ v.phone }}</td>
+
+            <td>{{ v.violation_type }}</td>
+            <td>{{ v.location }}</td>
+            <td>₹{{ v.fine_amount }}</td>
+
+            <!-- 📸 IMAGE FIX -->
+            <td>
+                {% if v.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + v.image) }}">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+
+            <td>
+                {% if v.status == "Paid" %}
+                    <span class="paid">✔ Paid</span>
+                {% else %}
+                    <span class="unpaid">❌ Unpaid</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if v.status != "Paid" %}
+                    <a href="/pay/{{ v.id }}" class="btn btn-success btn-sm"
+                       onclick="return confirm('Confirm payment?')">
+                        Pay
+                    </a>
+                {% else %}
+                    Done
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

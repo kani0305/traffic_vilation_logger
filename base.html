@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Traffic Violation System</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        /* 🌈 BACKGROUND */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1c1c1c, #2c3e50, #3498db);
+            min-height: 100vh;
+        }
+
+        /* 🧭 NAVBAR */
+        .navbar {
+            background: rgba(0,0,0,0.85);
+            padding: 10px 15px;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #00e6e6 !important;
+        }
+
+        .btn-nav {
+            margin-left: 8px;
+            border-radius: 20px;
+        }
+
+        /* 📦 CONTENT BOX */
+        .container-box {
+            background: white;
+            color: black;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 🔘 BUTTON STYLE */
+        .btn-custom {
+            border-radius: 25px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- 🔝 NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="/">
+            🚦 Traffic System
+        </a>
+
+        <div>
+
+            {% if current_user.is_authenticated %}
+
+                <a href="/" class="btn btn-outline-info btn-sm btn-nav">Dashboard</a>
+                <a href="/add" class="btn btn-success btn-sm btn-nav">Add</a>
+                <a href="/view" class="btn btn-warning btn-sm btn-nav">View</a>
+                <a href="/logout" class="btn btn-danger btn-sm btn-nav">Logout</a>
+
+            {% else %}
+
+                <a href="/login" class="btn btn-primary btn-sm btn-nav">Login</a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- 📦 PAGE CONTENT -->
+<div class="container">
+
+    <div class="container-box">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

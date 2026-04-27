@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Traffic Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 📊 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background: #eef2f7;
+        }
+
+        .nav {
+            background: #111;
+            padding: 10px;
+            color: white;
+        }
+
+        .nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+
+        .card-box {
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🚓 NAVBAR -->
+<div class="nav d-flex justify-content-between align-items-center px-3">
+    <h4>🚓 Traffic Control Room</h4>
+
+    <div>
+        <a href="/">Dashboard</a>
+        <a href="/add">Add Violation</a>
+        <a href="/view">View Violations</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<!-- 🔔 TOAST -->
+<div id="toast"
+     style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        display: none;
+        z-index: 9999;
+        font-weight: bold;
+     ">
+</div>
+
+<!-- 📊 DASHBOARD -->
+<div class="container">
+
+    {% if message %}
+    <script>
+        window.onload = function() {
+            showToast("{{ message }}");
+        }
+    </script>
+    {% endif %}
+
+    <!-- CARDS -->
+    <div class="row text-center">
+
+        <div class="col-md-4">
+            <div class="card-box bg-primary">
+                <h2 id="total">{{ total }}</h2>
+                <p>Total Violations</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-box bg-success">
+                <h2 id="paid">{{ paid }}</h2>
+                <p>Paid</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-box bg-danger">
+                <h2 id="unpaid">{{ unpaid }}</h2>
+                <p>Unpaid</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 📊 SMALL CHART -->
+    <div style="width: 300px; margin: 40px auto;">
+        <canvas id="violationChart"></canvas>
+    </div>
+
+</div>
+
+<!-- 🔔 TOAST SCRIPT -->
+<script>
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 3000);
+}
+</script>
+
+<!-- 📊 CHART SCRIPT -->
+<script>
+const paid = {{ paid }};
+const unpaid = {{ unpaid }};
+
+const ctx = document.getElementById('violationChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Paid', 'Unpaid'],
+        datasets: [{
+            data: [paid, unpaid],
+            backgroundColor: ['#28a745', '#dc3545']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+
+<!-- 🔄 LIVE AUTO UPDATE -->
+<script>
+setInterval(() => {
+    fetch(window.location.href)
+    .then(res => res.text())
+    .then(html => {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+
+        document.getElementById("total").innerText =
+            doc.getElementById("total").innerText;
+
+        document.getElementById("paid").innerText =
+            doc.getElementById("paid").innerText;
+
+        document.getElementById("unpaid").innerText =
+            doc.getElementById("unpaid").innerText;
+    });
+}, 10000);
+</script>
+
+</body>
+</html>
